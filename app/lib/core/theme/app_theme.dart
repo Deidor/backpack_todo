@@ -23,14 +23,8 @@ abstract final class AppTheme {
         color: AppColors.ink,
         letterSpacing: 1,
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: AppColors.ink,
-      ),
-      labelSmall: TextStyle(
-        fontSize: 10,
-        color: AppColors.ink,
-      ),
+      bodyLarge: TextStyle(fontSize: 16, color: AppColors.ink),
+      labelSmall: TextStyle(fontSize: 10, color: AppColors.ink),
     ),
   );
 }

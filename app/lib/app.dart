@@ -13,10 +13,7 @@ class PilgrimBackpackApp extends StatelessWidget {
       theme: AppTheme.light,
       home: const Scaffold(
         body: Center(
-          child: Text(
-            '¿Lo llevo todo?',
-            style: TextStyle(color: Colors.white),
-          ),
+          child: Text('¿Lo llevo todo?', style: TextStyle(color: Colors.white)),
         ),
       ),
     );
