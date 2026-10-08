@@ -1,4 +1,16 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
 
-@Module({})
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        PORT: Joi.number().port().default(3000),
+        DATABASE_URL: Joi.string().uri().required(),
+      }),
+    }),
+  ],
+})
 export class AppModule {}
