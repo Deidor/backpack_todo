@@ -22,6 +22,7 @@ flutter:
 
   assets:
     - assets/todo/
+    - assets/backpack/
 
   fonts:
     - family: SpecialElite
