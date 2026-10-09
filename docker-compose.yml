@@ -16,5 +16,20 @@ services:
       timeout: 3s
       retries: 10
 
+ # Optional: run the API in a container too.
+  #   docker compose --profile api up -d --build
+  api:
+    profiles: [api]
+    build: ./api
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://backpack:backpack@db:5432/backpack
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   db_data:
