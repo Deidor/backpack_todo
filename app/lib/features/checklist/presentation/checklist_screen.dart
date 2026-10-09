@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../data/api_exception.dart';
 import '../domain/item.dart';
 import 'checklist_controller.dart';
 import 'widgets/item_row.dart';
@@ -14,6 +15,9 @@ class ChecklistScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(checklistControllerProvider);
+    final controller = ref.read(
+      checklistControllerProvider.notifier,
+    );
 
     return NotebookScaffold(
       onClose: () => Navigator.of(context).maybePop(),
@@ -28,7 +32,15 @@ class ChecklistScreen extends ConsumerWidget {
           Expanded(
             child: _ChecklistBody(
               items: items,
-              onRetry: ref.read(checklistControllerProvider.notifier).reload,
+              onRetry: controller.reload,
+              onPackedChanged: (item, value) => _save(
+                context,
+                () => controller.setPacked(item, value),
+              ),
+              onToBuyChanged: (item, value) => _save(
+                context,
+                () => controller.setToBuy(item, value),
+              ),
             ),
           ),
         ],
@@ -46,11 +58,34 @@ class ChecklistScreen extends ConsumerWidget {
           const SizedBox(width: 10),
           Expanded(
             flex: 2,
-            child: NotebookButton(label: 'Editar', onPressed: null),
+            child: NotebookButton(
+              label: 'Editar',
+              onPressed: null,
+            ),
           ),
         ],
       ),
     );
+  }
+}
+
+Future<void> _save(
+  BuildContext context,
+  Future<void> Function() action,
+) async {
+  try {
+    await action();
+  } on ApiException {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text(
+            'No se ha podido guardar el cambio.',
+          ),
+        ),
+      );
   }
 }
 
@@ -63,15 +98,26 @@ class _ColumnHeaders extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text('OBJETO', style: Theme.of(context).textTheme.bodyMedium),
+          child: Text(
+            'OBJETO',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
         SizedBox(
           width: checkColumnWidth,
-          child: Text('LO LLEVO?', textAlign: TextAlign.center, style: style),
+          child: Text(
+            'LO LLEVO?',
+            textAlign: TextAlign.center,
+            style: style,
+          ),
         ),
         SizedBox(
           width: checkColumnWidth,
-          child: Text('COMPRAR', textAlign: TextAlign.center, style: style),
+          child: Text(
+            'COMPRAR',
+            textAlign: TextAlign.center,
+            style: style,
+          ),
         ),
       ],
     );
@@ -79,10 +125,18 @@ class _ColumnHeaders extends StatelessWidget {
 }
 
 class _ChecklistBody extends StatelessWidget {
-  const _ChecklistBody({required this.items, required this.onRetry});
+  const _ChecklistBody({
+    required this.items,
+    required this.onRetry,
+    required this.onPackedChanged,
+    required this.onToBuyChanged,
+  });
 
   final AsyncValue<List<Item>> items;
   final VoidCallback onRetry;
+  final void Function(Item item, bool value)
+  onPackedChanged;
+  final void Function(Item item, bool value) onToBuyChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +144,17 @@ class _ChecklistBody extends StatelessWidget {
     if (value == null) {
       if (items.isLoading) {
         return const Center(
-          child: CircularProgressIndicator(color: AppColors.ink),
+          child: CircularProgressIndicator(
+            color: AppColors.ink,
+          ),
         );
       }
       return _Message(
         text: 'No se ha podido cargar la libreta.\nRevisa tu conexión.',
-        action: NotebookButton(label: 'Reintentar', onPressed: onRetry),
+        action: NotebookButton(
+          label: 'Reintentar',
+          onPressed: onRetry,
+        ),
       );
     }
     if (value.isEmpty) {
@@ -108,7 +167,14 @@ class _ChecklistBody extends StatelessWidget {
       itemCount: value.length,
       itemBuilder: (context, index) {
         final item = value[index];
-        return ItemRow(key: ValueKey(item.id), item: item);
+        return ItemRow(
+          key: ValueKey(item.id),
+          item: item,
+          onPackedChanged: (value) =>
+              onPackedChanged(item, value),
+          onToBuyChanged: (value) =>
+              onToBuyChanged(item, value),
+        );
       },
     );
   }
@@ -131,7 +197,10 @@ class _Message extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          if (action != null) ...[const SizedBox(height: 16), action!],
+          if (action != null) ...[
+            const SizedBox(height: 16),
+            action!,
+          ],
         ],
       ),
     );
@@ -151,7 +220,11 @@ class _AddIcon extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.ink, width: 2),
       ),
-      child: const Icon(Icons.add, size: 16, color: Colors.white),
+      child: const Icon(
+        Icons.add,
+        size: 16,
+        color: Colors.white,
+      ),
     );
   }
 }
