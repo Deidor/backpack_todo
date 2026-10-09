@@ -18,9 +18,7 @@ class BackpackScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 24,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: FadeInDown(
                 duration: const Duration(milliseconds: 500),
                 from: 30,
@@ -31,9 +29,7 @@ class BackpackScreen extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: FadeInUp(
-                  duration: const Duration(
-                    milliseconds: 500,
-                  ),
+                  duration: const Duration(milliseconds: 500),
                   from: 60,
                   // Same proportions as mochila_back.png.
                   child: AspectRatio(
@@ -41,8 +37,7 @@ class BackpackScreen extends StatelessWidget {
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         final width = constraints.maxWidth;
-                        final height =
-                            constraints.maxHeight;
+                        final height = constraints.maxHeight;
                         return Stack(
                           children: [
                             Positioned.fill(
@@ -56,8 +51,7 @@ class BackpackScreen extends StatelessWidget {
                               top: height * 0.26,
                               width: width * 0.27,
                               child: const _BackpackObject(
-                                tool:
-                                    BackpackTool.checklist,
+                                tool: BackpackTool.checklist,
                               ),
                             ),
                             Positioned(
@@ -147,15 +141,10 @@ class _BackpackObject extends StatelessWidget {
       label: tool.label,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () =>
-            Navigator.of(context)
-                .push(ToolPreviewScreen.route(tool)),
+        onTap: () => Navigator.of(context).push(ToolPreviewScreen.route(tool)),
         child: AspectRatio(
           aspectRatio: tool.aspectRatio,
-          child: Image.asset(
-            tool.asset,
-            fit: BoxFit.contain,
-          ),
+          child: Image.asset(tool.asset, fit: BoxFit.contain),
         ),
       ),
     );

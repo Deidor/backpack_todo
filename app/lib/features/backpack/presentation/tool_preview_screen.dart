@@ -19,29 +19,19 @@ class ToolPreviewScreen extends StatelessWidget {
     return PageRouteBuilder<void>(
       opaque: false,
       transitionDuration: const Duration(milliseconds: 250),
-      reverseTransitionDuration: const Duration(
-        milliseconds: 200,
-      ),
-      pageBuilder: (
-        context,
-        animation,
-        secondaryAnimation,
-      ) => ToolPreviewScreen(tool: tool),
-      transitionsBuilder: (
-        context,
-        animation,
-        secondaryAnimation,
-        child,
-      ) => FadeTransition(opacity: animation, child: child),
+      reverseTransitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          ToolPreviewScreen(tool: tool),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+          FadeTransition(opacity: animation, child: child),
     );
   }
 
   void _open(BuildContext context) {
     final builder = tool.screenBuilder;
     if (builder == null) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: builder),
-    );
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute<void>(builder: builder));
   }
 
   @override
@@ -68,16 +58,12 @@ class ToolPreviewScreen extends StatelessWidget {
                   // Flexible lets the object shrink on short screens.
                   Flexible(
                     child: ElasticIn(
-                      duration: const Duration(
-                        milliseconds: 900,
-                      ),
+                      duration: const Duration(milliseconds: 900),
                       child: Semantics(
                         button: isAvailable,
                         label: 'Abrir ${tool.label}',
                         child: GestureDetector(
-                          onTap: isAvailable
-                              ? () => _open(context)
-                              : () {},
+                          onTap: isAvailable ? () => _open(context) : () {},
                           child: FractionallySizedBox(
                             widthFactor: 0.55,
                             child: AspectRatio(
@@ -94,12 +80,8 @@ class ToolPreviewScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   FadeInUp(
-                    delay: const Duration(
-                      milliseconds: 300,
-                    ),
-                    duration: const Duration(
-                      milliseconds: 400,
-                    ),
+                    delay: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 400),
                     from: 20,
                     child: Column(
                       children: [
@@ -108,17 +90,13 @@ class ToolPreviewScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontFamily: AppFonts.button,
                             fontSize: 24,
-                            fontVariations: [
-                              FontVariation('wght', 600),
-                            ],
+                            fontVariations: [FontVariation('wght', 600)],
                             color: AppColors.paper,
                           ),
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          isAvailable
-                              ? 'Toca para abrir'
-                              : 'Próximamente',
+                          isAvailable ? 'Toca para abrir' : 'Próximamente',
                           style: const TextStyle(
                             fontFamily: AppFonts.button,
                             fontSize: 16,

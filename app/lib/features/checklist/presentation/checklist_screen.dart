@@ -20,15 +20,11 @@ class ChecklistScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(checklistControllerProvider);
-    final controller = ref.read(
-      checklistControllerProvider.notifier,
-    );
+    final controller = ref.read(checklistControllerProvider.notifier);
     final pendingDeletions = ref.watch(editModeProvider);
     final editMode = ref.read(editModeProvider.notifier);
     final isEditing = pendingDeletions != null;
-    final exclusiveMode = ref.watch(
-      exclusiveCheckboxesProvider,
-    );
+    final exclusiveMode = ref.watch(exclusiveCheckboxesProvider);
 
     return NotebookScaffold(
       onClose: () => Navigator.of(context).maybePop(),
@@ -44,29 +40,20 @@ class ChecklistScreen extends ConsumerWidget {
             child: _ChecklistBody(
               items: items,
               hiddenIds: pendingDeletions ?? const {},
-              exclusiveMode: ref.watch(
-                exclusiveCheckboxesProvider,
-              ),
+              exclusiveMode: ref.watch(exclusiveCheckboxesProvider),
               onRetry: controller.reload,
               // Checkboxes are locked while editing so that cancelling
               // leaves everything untouched.
               onPackedChanged: isEditing
                   ? null
-                  : (item, value) => _save(
-                      context,
-                      () =>
-                          controller.setPacked(item, value),
-                    ),
+                  : (item, value) =>
+                        _save(context, () => controller.setPacked(item, value)),
               onToBuyChanged: isEditing
                   ? null
-                  : (item, value) => _save(
-                      context,
-                      () =>
-                          controller.setToBuy(item, value),
-                    ),
+                  : (item, value) =>
+                        _save(context, () => controller.setToBuy(item, value)),
               onDelete: isEditing
-                  ? (item) =>
-                        editMode.markForDeletion(item.id)
+                  ? (item) => editMode.markForDeletion(item.id)
                   : null,
             ),
           ),
@@ -106,8 +93,7 @@ class ChecklistScreen extends ConsumerWidget {
                     label: 'Añadir objeto',
                     icon: const _AddIcon(),
                     onPressed: items.hasValue
-                        ? () =>
-                              _addItem(context, controller)
+                        ? () => _addItem(context, controller)
                         : null,
                   ),
                 ),
@@ -116,8 +102,7 @@ class ChecklistScreen extends ConsumerWidget {
                   flex: 2,
                   child: NotebookButton(
                     label: 'Editar',
-                    onPressed:
-                        items.value?.isNotEmpty ?? false
+                    onPressed: items.value?.isNotEmpty ?? false
                         ? editMode.start
                         : null,
                   ),
@@ -155,10 +140,7 @@ Future<void> _saveDeletions(
 }
 
 /// Runs [action] and reports whether it succeeded, warning the user if not.
-Future<bool> _save(
-  BuildContext context,
-  Future<void> Function() action,
-) async {
+Future<bool> _save(BuildContext context, Future<void> Function() action) async {
   try {
     await action();
     return true;
@@ -167,11 +149,7 @@ Future<bool> _save(
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
-            content: Text(
-              'No se ha podido guardar el cambio.',
-            ),
-          ),
+          const SnackBar(content: Text('No se ha podido guardar el cambio.')),
         );
     }
     return false;
@@ -188,35 +166,18 @@ class _ColumnHeaders extends StatelessWidget {
     final style = Theme.of(context).textTheme.labelSmall;
     final packed = SizedBox(
       width: checkColumnWidth,
-      child: Text(
-        'LO LLEVO?',
-        textAlign: TextAlign.center,
-        style: style,
-      ),
+      child: Text('LO LLEVO?', textAlign: TextAlign.center, style: style),
     );
     final toBuy = SizedBox(
       width: checkColumnWidth,
-      child: Text(
-        'COMPRAR',
-        textAlign: TextAlign.center,
-        style: style,
-      ),
+      child: Text('COMPRAR', textAlign: TextAlign.center, style: style),
     );
     return Row(
       children: [
         Expanded(
-          child: Text(
-            'OBJETO',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text('OBJETO', style: Theme.of(context).textTheme.bodyMedium),
         ),
-        if (buyFirst) ...[
-          toBuy,
-          packed,
-        ] else ...[
-          packed,
-          toBuy,
-        ],
+        if (buyFirst) ...[toBuy, packed] else ...[packed, toBuy],
       ],
     );
   }
@@ -237,10 +198,8 @@ class _ChecklistBody extends StatelessWidget {
   final Set<int> hiddenIds;
   final bool exclusiveMode;
   final VoidCallback onRetry;
-  final void Function(Item item, bool value)?
-  onPackedChanged;
-  final void Function(Item item, bool value)?
-  onToBuyChanged;
+  final void Function(Item item, bool value)? onPackedChanged;
+  final void Function(Item item, bool value)? onToBuyChanged;
   final void Function(Item item)? onDelete;
 
   @override
@@ -249,17 +208,12 @@ class _ChecklistBody extends StatelessWidget {
     if (value == null) {
       if (items.isLoading) {
         return const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.ink,
-          ),
+          child: CircularProgressIndicator(color: AppColors.ink),
         );
       }
       return _Message(
         text: 'No se ha podido cargar la libreta.\nRevisa tu conexión.',
-        action: NotebookButton(
-          label: 'Reintentar',
-          onPressed: onRetry,
-        ),
+        action: NotebookButton(label: 'Reintentar', onPressed: onRetry),
       );
     }
     if (value.isEmpty) {
@@ -292,9 +246,7 @@ class _ChecklistBody extends StatelessWidget {
             onToBuyChanged: onToBuyChanged == null
                 ? null
                 : (value) => onToBuyChanged(item, value),
-            onDelete: onDelete == null
-                ? null
-                : () => onDelete(item),
+            onDelete: onDelete == null ? null : () => onDelete(item),
             exclusiveMode: exclusiveMode,
           ),
         );
@@ -320,10 +272,7 @@ class _Message extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          if (action != null) ...[
-            const SizedBox(height: 16),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 16), action!],
         ],
       ),
     );
@@ -343,11 +292,7 @@ class _AddIcon extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.ink, width: 2),
       ),
-      child: const Icon(
-        Icons.add,
-        size: 16,
-        color: Colors.white,
-      ),
+      child: const Icon(Icons.add, size: 16, color: Colors.white),
     );
   }
 }

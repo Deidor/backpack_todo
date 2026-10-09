@@ -49,5 +49,4 @@ class BackpackTool {
   );
 }
 
-Widget _buildChecklist(BuildContext context) =>
-    const ChecklistScreen();
+Widget _buildChecklist(BuildContext context) => const ChecklistScreen();
