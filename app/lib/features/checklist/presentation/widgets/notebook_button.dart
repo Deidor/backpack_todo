@@ -11,6 +11,7 @@ class NotebookButton extends StatelessWidget {
     this.icon,
     this.backgroundColor = Colors.white,
     this.foregroundColor = AppColors.ink,
+    this.borderColor = AppColors.buttonBorder,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class NotebookButton extends StatelessWidget {
   final Widget? icon;
   final Color backgroundColor;
   final Color foregroundColor;
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class NotebookButton extends StatelessWidget {
       color: backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: const BorderSide(color: AppColors.ink, width: 2),
+        side: BorderSide(color: borderColor, width: 2),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

@@ -102,9 +102,9 @@ class _CloseStrap extends StatelessWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: AppColors.danger,
+                    color: AppColors.close,
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.ink, width: 2),
+                    border: Border.all(color: AppColors.closeRing, width: 2),
                   ),
                   child: const Icon(Icons.close, color: Colors.white, size: 22),
                 ),

@@ -66,7 +66,8 @@ class ChecklistScreen extends ConsumerWidget {
                   child: NotebookButton(
                     label: 'Cancelar',
                     backgroundColor: AppColors.danger,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.onDanger,
+                    borderColor: AppColors.dangerBorder,
                     onPressed: editMode.stop,
                   ),
                 ),
@@ -75,6 +76,8 @@ class ChecklistScreen extends ConsumerWidget {
                   child: NotebookButton(
                     label: 'Guardar cambios',
                     backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.onAccent,
+                    borderColor: AppColors.accentBorder,
                     onPressed: () => _saveDeletions(
                       context,
                       controller,
@@ -288,7 +291,7 @@ class _AddIcon extends StatelessWidget {
       width: 24,
       height: 24,
       decoration: BoxDecoration(
-        color: AppColors.highlight,
+        color: AppColors.addIcon,
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.ink, width: 2),
       ),

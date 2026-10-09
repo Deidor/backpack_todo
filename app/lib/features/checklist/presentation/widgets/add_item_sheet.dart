@@ -18,7 +18,9 @@ class AddItemSheet extends StatefulWidget {
       isScrollControlled: true,
       backgroundColor: AppColors.panel,
       barrierColor: Colors.transparent,
-      shape: const RoundedRectangleBorder(),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) => const AddItemSheet(),
     );
   }
@@ -49,7 +51,7 @@ class _AddItemSheetState extends State<AddItemSheet> {
   @override
   Widget build(BuildContext context) {
     const fieldBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(6)),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
       borderSide: BorderSide.none,
     );
 
@@ -125,6 +127,8 @@ class _AddItemSheetState extends State<AddItemSheet> {
                   child: NotebookButton(
                     label: 'Añadir',
                     backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.onAccent,
+                    borderColor: AppColors.accentBorder,
                     onPressed: _submit,
                   ),
                 ),

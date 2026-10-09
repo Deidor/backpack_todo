@@ -13,19 +13,19 @@ abstract final class AppTheme {
     scaffoldBackgroundColor: AppColors.wood,
     fontFamily: AppFonts.notebook,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.check,
+      seedColor: AppColors.accentBorder,
       surface: AppColors.paper,
       error: AppColors.danger,
     ),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         fontSize: 22,
-        color: AppColors.ink,
+        color: AppColors.heading,
         letterSpacing: 1,
       ),
-      bodyLarge: TextStyle(fontSize: 16, color: AppColors.ink),
-      bodyMedium: TextStyle(fontSize: 13, color: AppColors.ink),
-      labelSmall: TextStyle(fontSize: 10, color: AppColors.ink),
+      bodyLarge: TextStyle(fontSize: 16, color: AppColors.itemText),
+      bodyMedium: TextStyle(fontSize: 13, color: AppColors.heading),
+      labelSmall: TextStyle(fontSize: 10, color: AppColors.heading),
     ),
   );
 }

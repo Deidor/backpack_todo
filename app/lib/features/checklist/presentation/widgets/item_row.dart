@@ -95,9 +95,9 @@ class _DeleteButton extends StatelessWidget {
             width: 22,
             height: 22,
             decoration: BoxDecoration(
-              color: AppColors.danger,
+              color: AppColors.delete,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.ink, width: 1.5),
+              border: Border.all(color: AppColors.itemText, width: 1.5),
             ),
             child: const Icon(Icons.remove, size: 16, color: Colors.white),
           ),
