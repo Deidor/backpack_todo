@@ -8,6 +8,9 @@ class NotebookCheckbox extends StatelessWidget {
     required this.value,
     required this.label,
     this.onChanged,
+    this.mark = Icons.check_rounded,
+    this.fillColor = AppColors.check,
+    this.markColor = AppColors.checkMark,
   });
 
   static const double size = 30;
@@ -15,6 +18,9 @@ class NotebookCheckbox extends StatelessWidget {
   final bool value;
   final String label;
   final ValueChanged<bool>? onChanged;
+  final IconData mark;
+  final Color fillColor;
+  final Color markColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,7 @@ class NotebookCheckbox extends StatelessWidget {
                   width: size - 6,
                   height: size - 7,
                   decoration: BoxDecoration(
-                    color: AppColors.check,
+                    color: fillColor,
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
@@ -46,14 +52,10 @@ class NotebookCheckbox extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
               if (value)
-                const Positioned(
+                Positioned(
                   top: -2,
                   right: -2,
-                  child: Icon(
-                    Icons.check_rounded,
-                    size: size + 4,
-                    color: AppColors.checkMark,
-                  ),
+                  child: Icon(mark, size: size + 4, color: markColor),
                 ),
             ],
           ),

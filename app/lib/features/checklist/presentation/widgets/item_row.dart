@@ -14,6 +14,7 @@ class ItemRow extends StatelessWidget {
     this.onPackedChanged,
     this.onToBuyChanged,
     this.onDelete,
+    this.distinctBuyMark = false,
   });
 
   final Item item;
@@ -23,6 +24,9 @@ class ItemRow extends StatelessWidget {
   /// Shows the red delete button when set.
   final VoidCallback? onDelete;
 
+  /// Draws "Comprar" with its own mark instead of the regular tick.
+  final bool distinctBuyMark;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -30,10 +34,7 @@ class ItemRow extends StatelessWidget {
       child: Row(
         children: [
           if (onDelete != null)
-            _DeleteButton(
-              name: item.name,
-              onPressed: onDelete!,
-            ),
+            _DeleteButton(name: item.name, onPressed: onDelete!),
           Expanded(child: _DottedName(name: item.name)),
           SizedBox(
             width: checkColumnWidth,
@@ -52,6 +53,15 @@ class ItemRow extends StatelessWidget {
                 value: item.toBuy,
                 label: 'Comprar: ${item.name}',
                 onChanged: onToBuyChanged,
+                mark: distinctBuyMark
+                    ? Icons.shopping_cart_rounded
+                    : Icons.check_rounded,
+                fillColor: distinctBuyMark
+                    ? AppColors.highlight
+                    : AppColors.check,
+                markColor: distinctBuyMark
+                    ? AppColors.ink
+                    : AppColors.checkMark,
               ),
             ),
           ),
@@ -62,10 +72,7 @@ class ItemRow extends StatelessWidget {
 }
 
 class _DeleteButton extends StatelessWidget {
-  const _DeleteButton({
-    required this.name,
-    required this.onPressed,
-  });
+  const _DeleteButton({required this.name, required this.onPressed});
 
   final String name;
   final VoidCallback onPressed;
@@ -86,16 +93,9 @@ class _DeleteButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.danger,
               shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.ink,
-                width: 1.5,
-              ),
+              border: Border.all(color: AppColors.ink, width: 1.5),
             ),
-            child: const Icon(
-              Icons.remove,
-              size: 16,
-              color: Colors.white,
-            ),
+            child: const Icon(Icons.remove, size: 16, color: Colors.white),
           ),
         ),
       ),
@@ -117,25 +117,18 @@ class _DottedName extends StatelessWidget {
           children: [
             ConstrainedBox(
               // Always leaves room for a short piece of dotted line.
-              constraints: BoxConstraints(
-                maxWidth: constraints.maxWidth - 16,
-              ),
+              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
               child: Text(
                 name.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             const SizedBox(width: 4),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 5,
-                  right: 4,
-                ),
+                padding: const EdgeInsets.only(bottom: 5, right: 4),
                 child: Image.asset(
                   'assets/todo/linea_puntos.png',
                   height: 4,

@@ -25,27 +25,18 @@ class NotebookButton extends StatelessWidget {
       color: backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: const BorderSide(
-          color: AppColors.ink,
-          width: 2,
-        ),
+        side: const BorderSide(color: AppColors.ink, width: 2),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 6,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (icon != null) ...[
-                icon!,
-                const SizedBox(width: 6),
-              ],
+              if (icon != null) ...[icon!, const SizedBox(width: 6)],
               Flexible(
                 child: Text(
                   label,
@@ -54,9 +45,7 @@ class NotebookButton extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: AppFonts.button,
                     fontSize: 14,
-                    fontVariations: const [
-                      FontVariation('wght', 600),
-                    ],
+                    fontVariations: const [FontVariation('wght', 600)],
                     color: foregroundColor,
                   ),
                 ),
