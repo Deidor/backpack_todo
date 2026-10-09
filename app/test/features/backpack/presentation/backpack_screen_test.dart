@@ -14,101 +14,67 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          itemsRepositoryProvider.overrideWithValue(
-            FakeItemsRepository(),
-          ),
+          itemsRepositoryProvider.overrideWithValue(FakeItemsRepository()),
         ],
-        child: MaterialApp(
-          theme: AppTheme.light,
-          home: const BackpackScreen(),
-        ),
+        child: MaterialApp(theme: AppTheme.light, home: const BackpackScreen()),
       ),
     );
     await tester.pumpAndSettle();
   }
 
-  Future<void> takeOut(
-    WidgetTester tester,
-    String label,
-  ) async {
+  Future<void> takeOut(WidgetTester tester, String label) async {
     await tester.tap(find.bySemanticsLabel(label));
     await tester.pumpAndSettle();
   }
 
-  testWidgets(
-    'tapping an object takes it out of the backpack',
-    (tester) async {
-      await pumpScreen(tester);
+  testWidgets('tapping an object takes it out of the backpack', (tester) async {
+    await pumpScreen(tester);
 
-      await takeOut(tester, 'Libreta');
+    await takeOut(tester, 'Libreta');
 
-      expect(
-        find.byType(ToolPreviewScreen),
-        findsOneWidget,
-      );
-      expect(find.text('¿Lo llevo todo?'), findsOneWidget);
-      expect(find.text('Toca para abrir'), findsOneWidget);
-    },
-  );
+    expect(find.byType(ToolPreviewScreen), findsOneWidget);
+    expect(find.text('¿Lo llevo todo?'), findsOneWidget);
+    expect(find.text('Toca para abrir'), findsOneWidget);
+  });
 
-  testWidgets(
-    'tapping the notebook again opens the checklist',
-    (tester) async {
-      await pumpScreen(tester);
-      await takeOut(tester, 'Libreta');
+  testWidgets('tapping the notebook again opens the checklist', (tester) async {
+    await pumpScreen(tester);
+    await takeOut(tester, 'Libreta');
 
-      await tester.tap(
-        find.bySemanticsLabel('Abrir Libreta'),
-      );
-      await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Abrir Libreta'));
+    await tester.pumpAndSettle();
 
-      expect(find.byType(ChecklistScreen), findsOneWidget);
-      expect(find.byType(ToolPreviewScreen), findsNothing);
-    },
-  );
+    expect(find.byType(ChecklistScreen), findsOneWidget);
+    expect(find.byType(ToolPreviewScreen), findsNothing);
+  });
 
-  testWidgets(
-    'closing the checklist returns to the backpack',
-    (tester) async {
-      await pumpScreen(tester);
-      await takeOut(tester, 'Libreta');
-      await tester.tap(
-        find.bySemanticsLabel('Abrir Libreta'),
-      );
-      await tester.pumpAndSettle();
+  testWidgets('closing the checklist returns to the backpack', (tester) async {
+    await pumpScreen(tester);
+    await takeOut(tester, 'Libreta');
+    await tester.tap(find.bySemanticsLabel('Abrir Libreta'));
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.bySemanticsLabel('Cerrar'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Cerrar'));
+    await tester.pumpAndSettle();
 
-      expect(find.byType(ChecklistScreen), findsNothing);
-      expect(find.text('La Mochila'), findsOneWidget);
-    },
-  );
+    expect(find.byType(ChecklistScreen), findsNothing);
+    expect(find.text('La Mochila'), findsOneWidget);
+  });
 
-  testWidgets(
-    'unavailable tools are shown as coming soon',
-    (tester) async {
-      await pumpScreen(tester);
+  testWidgets('unavailable tools are shown as coming soon', (tester) async {
+    await pumpScreen(tester);
 
-      await takeOut(tester, 'Libro');
+    await takeOut(tester, 'Libro');
 
-      expect(find.text('Próximamente'), findsOneWidget);
+    expect(find.text('Próximamente'), findsOneWidget);
 
-      await tester.tap(
-        find.bySemanticsLabel('Abrir Libro'),
-      );
-      await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Abrir Libro'));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byType(ToolPreviewScreen),
-        findsOneWidget,
-      );
-    },
-  );
+    expect(find.byType(ToolPreviewScreen), findsOneWidget);
+  });
 
-  testWidgets('tapping outside the object puts it back', (
-    tester,
-  ) async {
+  testWidgets('tapping outside the object puts it back', (tester) async {
     await pumpScreen(tester);
     await takeOut(tester, 'Credencial');
 
