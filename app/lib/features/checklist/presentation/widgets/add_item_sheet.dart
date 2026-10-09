@@ -40,9 +40,7 @@ class _AddItemSheetState extends State<AddItemSheet> {
   void _submit() {
     final name = _controller.text.trim();
     if (name.isEmpty) {
-      setState(
-        () => _error = 'Escribe el nombre del objeto.',
-      );
+      setState(() => _error = 'Escribe el nombre del objeto.');
       return;
     }
     Navigator.of(context).pop(name);
@@ -73,9 +71,7 @@ class _AddItemSheetState extends State<AddItemSheet> {
               style: TextStyle(
                 fontFamily: AppFonts.button,
                 fontSize: 18,
-                fontVariations: [
-                  FontVariation('wght', 600),
-                ],
+                fontVariations: [FontVariation('wght', 600)],
                 color: AppColors.highlight,
               ),
             ),
@@ -83,13 +79,10 @@ class _AddItemSheetState extends State<AddItemSheet> {
             TextField(
               controller: _controller,
               autofocus: true,
-              textCapitalization:
-                  TextCapitalization.sentences,
+              textCapitalization: TextCapitalization.sentences,
               textInputAction: TextInputAction.done,
               inputFormatters: [
-                LengthLimitingTextInputFormatter(
-                  AddItemSheet.maxNameLength,
-                ),
+                LengthLimitingTextInputFormatter(AddItemSheet.maxNameLength),
               ],
               onChanged: (_) {
                 if (_error != null) {
@@ -105,13 +98,9 @@ class _AddItemSheetState extends State<AddItemSheet> {
               ),
               decoration: InputDecoration(
                 hintText: 'Escribe el texto aquí',
-                hintStyle: const TextStyle(
-                  color: Colors.white54,
-                ),
+                hintStyle: const TextStyle(color: Colors.white54),
                 errorText: _error,
-                errorStyle: const TextStyle(
-                  color: AppColors.highlight,
-                ),
+                errorStyle: const TextStyle(color: AppColors.highlight),
                 filled: true,
                 fillColor: AppColors.panelField,
                 isDense: true,
@@ -128,8 +117,7 @@ class _AddItemSheetState extends State<AddItemSheet> {
                 Expanded(
                   child: NotebookButton(
                     label: 'Cancelar',
-                    onPressed: () =>
-                        Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
                 const SizedBox(width: 12),

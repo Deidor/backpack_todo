@@ -12,10 +12,8 @@ final checklistControllerProvider =
       retry: (retryCount, error) => null,
     );
 
-class ChecklistController
-    extends AsyncNotifier<List<Item>> {
-  ItemsRepository get _repository =>
-      ref.read(itemsRepositoryProvider);
+class ChecklistController extends AsyncNotifier<List<Item>> {
+  ItemsRepository get _repository => ref.read(itemsRepositoryProvider);
 
   @override
   Future<List<Item>> build() {
@@ -25,33 +23,21 @@ class ChecklistController
   void reload() => ref.invalidateSelf();
 
   Future<void> setPacked(Item item, bool value) async {
-    _replace(
-      item.id,
-      (current) => current.copyWith(packed: value),
-    );
+    _replace(item.id, (current) => current.copyWith(packed: value));
     try {
       await _repository.updateItem(item.id, packed: value);
     } on ApiException {
-      _replace(
-        item.id,
-        (current) => current.copyWith(packed: !value),
-      );
+      _replace(item.id, (current) => current.copyWith(packed: !value));
       rethrow;
     }
   }
 
   Future<void> setToBuy(Item item, bool value) async {
-    _replace(
-      item.id,
-      (current) => current.copyWith(toBuy: value),
-    );
+    _replace(item.id, (current) => current.copyWith(toBuy: value));
     try {
       await _repository.updateItem(item.id, toBuy: value);
     } on ApiException {
-      _replace(
-        item.id,
-        (current) => current.copyWith(toBuy: !value),
-      );
+      _replace(item.id, (current) => current.copyWith(toBuy: !value));
       rethrow;
     }
   }
@@ -61,10 +47,7 @@ class ChecklistController
     state = AsyncData([...?state.value, created]);
   }
 
-  void _replace(
-    int id,
-    Item Function(Item current) update,
-  ) {
+  void _replace(int id, Item Function(Item current) update) {
     final items = state.value;
     if (items == null) return;
     state = AsyncData([

@@ -16,9 +16,7 @@ class ChecklistScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(checklistControllerProvider);
-    final controller = ref.read(
-      checklistControllerProvider.notifier,
-    );
+    final controller = ref.read(checklistControllerProvider.notifier);
 
     return NotebookScaffold(
       onClose: () => Navigator.of(context).maybePop(),
@@ -34,14 +32,10 @@ class ChecklistScreen extends ConsumerWidget {
             child: _ChecklistBody(
               items: items,
               onRetry: controller.reload,
-              onPackedChanged: (item, value) => _save(
-                context,
-                () => controller.setPacked(item, value),
-              ),
-              onToBuyChanged: (item, value) => _save(
-                context,
-                () => controller.setToBuy(item, value),
-              ),
+              onPackedChanged: (item, value) =>
+                  _save(context, () => controller.setPacked(item, value)),
+              onToBuyChanged: (item, value) =>
+                  _save(context, () => controller.setToBuy(item, value)),
             ),
           ),
         ],
@@ -61,10 +55,7 @@ class ChecklistScreen extends ConsumerWidget {
           const SizedBox(width: 10),
           Expanded(
             flex: 2,
-            child: NotebookButton(
-              label: 'Editar',
-              onPressed: null,
-            ),
+            child: NotebookButton(label: 'Editar', onPressed: null),
           ),
         ],
       ),
@@ -81,10 +72,7 @@ Future<void> _addItem(
   await _save(context, () => controller.addItem(name));
 }
 
-Future<void> _save(
-  BuildContext context,
-  Future<void> Function() action,
-) async {
+Future<void> _save(BuildContext context, Future<void> Function() action) async {
   try {
     await action();
   } on ApiException {
@@ -92,11 +80,7 @@ Future<void> _save(
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
-          content: Text(
-            'No se ha podido guardar el cambio.',
-          ),
-        ),
+        const SnackBar(content: Text('No se ha podido guardar el cambio.')),
       );
   }
 }
@@ -110,26 +94,15 @@ class _ColumnHeaders extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(
-            'OBJETO',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text('OBJETO', style: Theme.of(context).textTheme.bodyMedium),
         ),
         SizedBox(
           width: checkColumnWidth,
-          child: Text(
-            'LO LLEVO?',
-            textAlign: TextAlign.center,
-            style: style,
-          ),
+          child: Text('LO LLEVO?', textAlign: TextAlign.center, style: style),
         ),
         SizedBox(
           width: checkColumnWidth,
-          child: Text(
-            'COMPRAR',
-            textAlign: TextAlign.center,
-            style: style,
-          ),
+          child: Text('COMPRAR', textAlign: TextAlign.center, style: style),
         ),
       ],
     );
@@ -146,8 +119,7 @@ class _ChecklistBody extends StatelessWidget {
 
   final AsyncValue<List<Item>> items;
   final VoidCallback onRetry;
-  final void Function(Item item, bool value)
-  onPackedChanged;
+  final void Function(Item item, bool value) onPackedChanged;
   final void Function(Item item, bool value) onToBuyChanged;
 
   @override
@@ -156,17 +128,12 @@ class _ChecklistBody extends StatelessWidget {
     if (value == null) {
       if (items.isLoading) {
         return const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.ink,
-          ),
+          child: CircularProgressIndicator(color: AppColors.ink),
         );
       }
       return _Message(
         text: 'No se ha podido cargar la libreta.\nRevisa tu conexión.',
-        action: NotebookButton(
-          label: 'Reintentar',
-          onPressed: onRetry,
-        ),
+        action: NotebookButton(label: 'Reintentar', onPressed: onRetry),
       );
     }
     if (value.isEmpty) {
@@ -182,10 +149,8 @@ class _ChecklistBody extends StatelessWidget {
         return ItemRow(
           key: ValueKey(item.id),
           item: item,
-          onPackedChanged: (value) =>
-              onPackedChanged(item, value),
-          onToBuyChanged: (value) =>
-              onToBuyChanged(item, value),
+          onPackedChanged: (value) => onPackedChanged(item, value),
+          onToBuyChanged: (value) => onToBuyChanged(item, value),
         );
       },
     );
@@ -209,10 +174,7 @@ class _Message extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          if (action != null) ...[
-            const SizedBox(height: 16),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 16), action!],
         ],
       ),
     );
@@ -232,11 +194,7 @@ class _AddIcon extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.ink, width: 2),
       ),
-      child: const Icon(
-        Icons.add,
-        size: 16,
-        color: Colors.white,
-      ),
+      child: const Icon(Icons.add, size: 16, color: Colors.white),
     );
   }
 }
