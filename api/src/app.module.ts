@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import { Item } from './items/item.entity';
 import { ItemsModule } from './items/items.module';
+import { join } from 'node:path';
 
 @Module({
   imports: [
@@ -24,6 +25,10 @@ import { ItemsModule } from './items/items.module';
           ? { rejectUnauthorized: false }
           : false,
         entities: [Item],
+        // Applies pending migrations on startup, so a fresh database is
+        // ready without a manual step.
+        migrations: [join(__dirname, 'database/migrations/*.js')],
+        migrationsRun: true,
       }),
     }),
     ItemsModule,
