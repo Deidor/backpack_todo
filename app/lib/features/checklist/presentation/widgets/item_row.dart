@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/item.dart';
 import 'notebook_checkbox.dart';
 
@@ -12,11 +13,15 @@ class ItemRow extends StatelessWidget {
     required this.item,
     this.onPackedChanged,
     this.onToBuyChanged,
+    this.onDelete,
   });
 
   final Item item;
   final ValueChanged<bool>? onPackedChanged;
   final ValueChanged<bool>? onToBuyChanged;
+
+  /// Shows the red delete button when set.
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,11 @@ class ItemRow extends StatelessWidget {
       height: 46,
       child: Row(
         children: [
+          if (onDelete != null)
+            _DeleteButton(
+              name: item.name,
+              onPressed: onDelete!,
+            ),
           Expanded(child: _DottedName(name: item.name)),
           SizedBox(
             width: checkColumnWidth,
@@ -51,6 +61,48 @@ class ItemRow extends StatelessWidget {
   }
 }
 
+class _DeleteButton extends StatelessWidget {
+  const _DeleteButton({
+    required this.name,
+    required this.onPressed,
+  });
+
+  final String name;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Eliminar: $name',
+      child: InkResponse(
+        onTap: onPressed,
+        radius: 20,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              color: AppColors.danger,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.ink,
+                width: 1.5,
+              ),
+            ),
+            child: const Icon(
+              Icons.remove,
+              size: 16,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _DottedName extends StatelessWidget {
   const _DottedName({required this.name});
 
@@ -65,18 +117,25 @@ class _DottedName extends StatelessWidget {
           children: [
             ConstrainedBox(
               // Always leaves room for a short piece of dotted line.
-              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
+              constraints: BoxConstraints(
+                maxWidth: constraints.maxWidth - 16,
+              ),
               child: Text(
                 name.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge,
               ),
             ),
             const SizedBox(width: 4),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 5, right: 4),
+                padding: const EdgeInsets.only(
+                  bottom: 5,
+                  right: 4,
+                ),
                 child: Image.asset(
                   'assets/todo/linea_puntos.png',
                   height: 4,
