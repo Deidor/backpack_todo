@@ -12,6 +12,7 @@ import { ItemsModule } from './items/items.module';
       validationSchema: Joi.object({
         PORT: Joi.number().port().default(3000),
         DATABASE_URL: Joi.string().uri().required(),
+        DATABASE_SSL: Joi.boolean().default(false),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -19,6 +20,9 @@ import { ItemsModule } from './items/items.module';
       useFactory: (config: ConfigService) => ({
         type: 'postgres' as const,
         url: config.getOrThrow<string>('DATABASE_URL'),
+        ssl: config.get<boolean>('DATABASE_SSL')
+          ? { rejectUnauthorized: false }
+          : false,
         entities: [Item],
       }),
     }),
