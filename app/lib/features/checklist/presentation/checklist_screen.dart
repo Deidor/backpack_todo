@@ -22,6 +22,7 @@ class ChecklistScreen extends ConsumerWidget {
     final pendingDeletions = ref.watch(editModeProvider);
     final editMode = ref.read(editModeProvider.notifier);
     final isEditing = pendingDeletions != null;
+    final exclusiveMode = ref.watch(exclusiveCheckboxesProvider);
 
     return NotebookScaffold(
       onClose: () => Navigator.of(context).maybePop(),
@@ -32,12 +33,12 @@ class ChecklistScreen extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
-          const _ColumnHeaders(),
+          _ColumnHeaders(buyFirst: exclusiveMode),
           Expanded(
             child: _ChecklistBody(
               items: items,
               hiddenIds: pendingDeletions ?? const {},
-              distinctBuyMark: ref.watch(exclusiveCheckboxesProvider),
+              exclusiveMode: ref.watch(exclusiveCheckboxesProvider),
               onRetry: controller.reload,
               // Checkboxes are locked while editing so that cancelling
               // leaves everything untouched.
@@ -154,24 +155,27 @@ Future<bool> _save(BuildContext context, Future<void> Function() action) async {
 }
 
 class _ColumnHeaders extends StatelessWidget {
-  const _ColumnHeaders();
+  const _ColumnHeaders({required this.buyFirst});
+
+  final bool buyFirst;
 
   @override
   Widget build(BuildContext context) {
     final style = Theme.of(context).textTheme.labelSmall;
+    final packed = SizedBox(
+      width: checkColumnWidth,
+      child: Text('LO LLEVO?', textAlign: TextAlign.center, style: style),
+    );
+    final toBuy = SizedBox(
+      width: checkColumnWidth,
+      child: Text('COMPRAR', textAlign: TextAlign.center, style: style),
+    );
     return Row(
       children: [
         Expanded(
           child: Text('OBJETO', style: Theme.of(context).textTheme.bodyMedium),
         ),
-        SizedBox(
-          width: checkColumnWidth,
-          child: Text('LO LLEVO?', textAlign: TextAlign.center, style: style),
-        ),
-        SizedBox(
-          width: checkColumnWidth,
-          child: Text('COMPRAR', textAlign: TextAlign.center, style: style),
-        ),
+        if (buyFirst) ...[toBuy, packed] else ...[packed, toBuy],
       ],
     );
   }
@@ -181,7 +185,7 @@ class _ChecklistBody extends StatelessWidget {
   const _ChecklistBody({
     required this.items,
     required this.hiddenIds,
-    required this.distinctBuyMark,
+    required this.exclusiveMode,
     required this.onRetry,
     required this.onPackedChanged,
     required this.onToBuyChanged,
@@ -190,7 +194,7 @@ class _ChecklistBody extends StatelessWidget {
 
   final AsyncValue<List<Item>> items;
   final Set<int> hiddenIds;
-  final bool distinctBuyMark;
+  final bool exclusiveMode;
   final VoidCallback onRetry;
   final void Function(Item item, bool value)? onPackedChanged;
   final void Function(Item item, bool value)? onToBuyChanged;
@@ -237,7 +241,7 @@ class _ChecklistBody extends StatelessWidget {
               ? null
               : (value) => onToBuyChanged(item, value),
           onDelete: onDelete == null ? null : () => onDelete(item),
-          distinctBuyMark: distinctBuyMark,
+          exclusiveMode: exclusiveMode,
         );
       },
     );

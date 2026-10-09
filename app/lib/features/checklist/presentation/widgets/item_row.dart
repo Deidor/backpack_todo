@@ -14,7 +14,7 @@ class ItemRow extends StatelessWidget {
     this.onPackedChanged,
     this.onToBuyChanged,
     this.onDelete,
-    this.distinctBuyMark = false,
+    this.exclusiveMode = false,
   });
 
   final Item item;
@@ -24,11 +24,37 @@ class ItemRow extends StatelessWidget {
   /// Shows the red delete button when set.
   final VoidCallback? onDelete;
 
-  /// Draws "Comprar" with its own mark instead of the regular tick.
-  final bool distinctBuyMark;
+  /// Alternative layout: "Comprar" comes first and has its own mark.
+  final bool exclusiveMode;
 
   @override
   Widget build(BuildContext context) {
+    final packedBox = SizedBox(
+      width: checkColumnWidth,
+      child: Center(
+        child: NotebookCheckbox(
+          value: item.packed,
+          label: 'Lo llevo: ${item.name}',
+          onChanged: onPackedChanged,
+        ),
+      ),
+    );
+    final toBuyBox = SizedBox(
+      width: checkColumnWidth,
+      child: Center(
+        child: NotebookCheckbox(
+          value: item.toBuy,
+          label: 'Comprar: ${item.name}',
+          onChanged: onToBuyChanged,
+          mark: exclusiveMode
+              ? Icons.shopping_cart_rounded
+              : Icons.check_rounded,
+          fillColor: exclusiveMode ? AppColors.highlight : AppColors.check,
+          markColor: exclusiveMode ? AppColors.ink : AppColors.checkMark,
+        ),
+      ),
+    );
+
     return SizedBox(
       height: 46,
       child: Row(
@@ -36,35 +62,13 @@ class ItemRow extends StatelessWidget {
           if (onDelete != null)
             _DeleteButton(name: item.name, onPressed: onDelete!),
           Expanded(child: _DottedName(name: item.name)),
-          SizedBox(
-            width: checkColumnWidth,
-            child: Center(
-              child: NotebookCheckbox(
-                value: item.packed,
-                label: 'Lo llevo: ${item.name}',
-                onChanged: onPackedChanged,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: checkColumnWidth,
-            child: Center(
-              child: NotebookCheckbox(
-                value: item.toBuy,
-                label: 'Comprar: ${item.name}',
-                onChanged: onToBuyChanged,
-                mark: distinctBuyMark
-                    ? Icons.shopping_cart_rounded
-                    : Icons.check_rounded,
-                fillColor: distinctBuyMark
-                    ? AppColors.highlight
-                    : AppColors.check,
-                markColor: distinctBuyMark
-                    ? AppColors.ink
-                    : AppColors.checkMark,
-              ),
-            ),
-          ),
+          if (exclusiveMode) ...[
+            toBuyBox,
+            packedBox,
+          ] else ...[
+            packedBox,
+            toBuyBox,
+          ],
         ],
       ),
     );

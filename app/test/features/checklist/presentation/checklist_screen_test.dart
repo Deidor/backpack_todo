@@ -9,6 +9,7 @@ import 'package:mochila_peregrino/features/checklist/data/items_providers.dart';
 import 'package:mochila_peregrino/features/checklist/data/items_repository.dart';
 import 'package:mochila_peregrino/features/checklist/domain/item.dart';
 import 'package:mochila_peregrino/features/checklist/presentation/checklist_screen.dart';
+import 'package:mochila_peregrino/core/config/feature_flags.dart';
 
 import '../fake_items_repository.dart';
 
@@ -16,10 +17,17 @@ void main() {
   const palos = Item(id: 1, name: 'Palos', packed: true, toBuy: false);
   const gorro = Item(id: 2, name: 'Gorro', packed: false, toBuy: true);
 
-  Future<void> pumpScreen(WidgetTester tester, ItemsRepository repository) {
+  Future<void> pumpScreen(
+    WidgetTester tester,
+    ItemsRepository repository, {
+    bool exclusive = false,
+  }) {
     return tester.pumpWidget(
       ProviderScope(
-        overrides: [itemsRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          itemsRepositoryProvider.overrideWithValue(repository),
+          exclusiveCheckboxesProvider.overrideWithValue(exclusive),
+        ],
         child: MaterialApp(
           theme: AppTheme.light,
           home: const ChecklistScreen(),
@@ -238,6 +246,42 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(repository.items.first, palos);
+    });
+  });
+
+  group('column order', () {
+    double x(WidgetTester tester, Finder finder) => tester.getCenter(finder).dx;
+
+    testWidgets('"Lo llevo" comes first by default', (tester) async {
+      await pumpScreen(tester, FakeItemsRepository(items: [palos]));
+      await tester.pumpAndSettle();
+
+      expect(
+        x(tester, find.text('LO LLEVO?')),
+        lessThan(x(tester, find.text('COMPRAR'))),
+      );
+      expect(
+        x(tester, find.bySemanticsLabel('Lo llevo: Palos')),
+        lessThan(x(tester, find.bySemanticsLabel('Comprar: Palos'))),
+      );
+    });
+
+    testWidgets('"Comprar" comes first in exclusive mode', (tester) async {
+      await pumpScreen(
+        tester,
+        FakeItemsRepository(items: [palos]),
+        exclusive: true,
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        x(tester, find.text('COMPRAR')),
+        lessThan(x(tester, find.text('LO LLEVO?'))),
+      );
+      expect(
+        x(tester, find.bySemanticsLabel('Comprar: Palos')),
+        lessThan(x(tester, find.bySemanticsLabel('Lo llevo: Palos'))),
+      );
     });
   });
 }
