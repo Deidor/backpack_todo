@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../data/api_exception.dart';
 import '../domain/item.dart';
 import 'checklist_controller.dart';
+import 'widgets/add_item_sheet.dart';
 import 'widgets/item_row.dart';
 import 'widgets/notebook_button.dart';
 import 'widgets/notebook_scaffold.dart';
@@ -52,7 +53,9 @@ class ChecklistScreen extends ConsumerWidget {
             child: NotebookButton(
               label: 'Añadir objeto',
               icon: const _AddIcon(),
-              onPressed: null,
+              onPressed: items.hasValue
+                  ? () => _addItem(context, controller)
+                  : null,
             ),
           ),
           const SizedBox(width: 10),
@@ -67,6 +70,15 @@ class ChecklistScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> _addItem(
+  BuildContext context,
+  ChecklistController controller,
+) async {
+  final name = await AddItemSheet.show(context);
+  if (name == null || !context.mounted) return;
+  await _save(context, () => controller.addItem(name));
 }
 
 Future<void> _save(

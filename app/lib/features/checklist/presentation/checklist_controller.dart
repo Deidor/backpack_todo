@@ -56,6 +56,11 @@ class ChecklistController
     }
   }
 
+  Future<void> addItem(String name) async {
+    final created = await _repository.createItem(name);
+    state = AsyncData([...?state.value, created]);
+  }
+
   void _replace(
     int id,
     Item Function(Item current) update,
