@@ -19,13 +19,22 @@ abstract final class AppTheme {
     ),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
-        fontSize: 22,
+        fontSize: 20,
+        height: 1,
         color: AppColors.heading,
-        letterSpacing: 1,
       ),
-      bodyLarge: TextStyle(fontSize: 16, color: AppColors.itemText),
-      bodyMedium: TextStyle(fontSize: 13, color: AppColors.heading),
-      labelSmall: TextStyle(fontSize: 10, color: AppColors.heading),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: AppColors.itemText,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 13,
+        color: AppColors.heading,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 10,
+        color: AppColors.heading,
+      ),
     ),
   );
 }
