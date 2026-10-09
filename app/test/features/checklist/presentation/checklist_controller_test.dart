@@ -55,4 +55,22 @@ void main() {
       expect(items().first.packed, isFalse);
     },
   );
+
+  test('addItem appends the created item to the list', () async {
+    await controller().addItem('Botas');
+
+    expect(items().map((item) => item.name), ['Palos', 'Gorro', 'Botas']);
+    expect(repository.items, hasLength(3));
+  });
+
+  test('addItem leaves the list untouched when the request fails', () async {
+    repository.failWrites = true;
+
+    await expectLater(
+      controller().addItem('Botas'),
+      throwsA(isA<ApiException>()),
+    );
+
+    expect(items(), [palos, gorro]);
+  });
 }

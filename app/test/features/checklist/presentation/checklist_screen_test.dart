@@ -107,4 +107,50 @@ void main() {
     expect(find.text('No se ha podido guardar el cambio.'), findsOneWidget);
     expect(repository.items.last.packed, isFalse);
   });
+
+  group('add item panel', () {
+    Future<FakeItemsRepository> openPanel(WidgetTester tester) async {
+      final repository = FakeItemsRepository(items: [palos]);
+      await pumpScreen(tester, repository);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Añadir objeto'));
+      await tester.pumpAndSettle();
+      return repository;
+    }
+
+    testWidgets('creates the item and shows it in the list', (tester) async {
+      final repository = await openPanel(tester);
+
+      await tester.enterText(find.byType(TextField), '  Botas  ');
+      await tester.tap(find.text('Añadir'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TextField), findsNothing);
+      expect(find.text('BOTAS'), findsOneWidget);
+      expect(repository.items.last.name, 'Botas');
+    });
+
+    testWidgets('rejects an empty name and stays open', (tester) async {
+      final repository = await openPanel(tester);
+
+      await tester.enterText(find.byType(TextField), '   ');
+      await tester.tap(find.text('Añadir'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Escribe el nombre del objeto.'), findsOneWidget);
+      expect(repository.items, hasLength(1));
+    });
+
+    testWidgets('cancel closes the panel without changes', (tester) async {
+      final repository = await openPanel(tester);
+
+      await tester.enterText(find.byType(TextField), 'Botas');
+      await tester.tap(find.text('Cancelar'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TextField), findsNothing);
+      expect(find.text('BOTAS'), findsNothing);
+      expect(repository.items, hasLength(1));
+    });
+  });
 }
