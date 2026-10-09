@@ -73,4 +73,28 @@ void main() {
 
     expect(items(), [palos, gorro]);
   });
+
+  test(
+    'deleteItems removes the items from the state and the backend',
+    () async {
+      await controller().deleteItems([palos.id]);
+
+      expect(items(), [gorro]);
+      expect(repository.items, [gorro]);
+    },
+  );
+
+  test(
+    'deleteItems leaves the list untouched when the request fails',
+    () async {
+      repository.failWrites = true;
+
+      await expectLater(
+        controller().deleteItems([palos.id]),
+        throwsA(isA<ApiException>()),
+      );
+
+      expect(items(), [palos, gorro]);
+    },
+  );
 }

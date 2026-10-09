@@ -153,4 +153,91 @@ void main() {
       expect(repository.items, hasLength(1));
     });
   });
+
+  group('edit mode', () {
+    Future<FakeItemsRepository> startEditing(WidgetTester tester) async {
+      final repository = FakeItemsRepository(items: [palos, gorro]);
+      await pumpScreen(tester, repository);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Editar'));
+      await tester.pumpAndSettle();
+      return repository;
+    }
+
+    testWidgets('swaps the bottom bar and shows a delete button per row', (
+      tester,
+    ) async {
+      await startEditing(tester);
+
+      expect(find.text('Cancelar'), findsOneWidget);
+      expect(find.text('Guardar cambios'), findsOneWidget);
+      expect(find.text('Añadir objeto'), findsNothing);
+      expect(find.bySemanticsLabel('Eliminar: Palos'), findsOneWidget);
+      expect(find.bySemanticsLabel('Eliminar: Gorro'), findsOneWidget);
+    });
+
+    testWidgets('deleting only hides the row until changes are saved', (
+      tester,
+    ) async {
+      final repository = await startEditing(tester);
+
+      await tester.tap(find.bySemanticsLabel('Eliminar: Palos'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('PALOS'), findsNothing);
+      expect(repository.items, hasLength(2));
+    });
+
+    testWidgets('cancel restores the rows and deletes nothing', (tester) async {
+      final repository = await startEditing(tester);
+
+      await tester.tap(find.bySemanticsLabel('Eliminar: Palos'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancelar'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('PALOS'), findsOneWidget);
+      expect(find.text('Editar'), findsOneWidget);
+      expect(repository.items, hasLength(2));
+    });
+
+    testWidgets('save deletes the marked items and leaves edit mode', (
+      tester,
+    ) async {
+      final repository = await startEditing(tester);
+
+      await tester.tap(find.bySemanticsLabel('Eliminar: Palos'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Guardar cambios'));
+      await tester.pumpAndSettle();
+
+      expect(repository.items, [gorro]);
+      expect(find.text('PALOS'), findsNothing);
+      expect(find.text('GORRO'), findsOneWidget);
+      expect(find.text('Editar'), findsOneWidget);
+    });
+
+    testWidgets('stays in edit mode when saving fails', (tester) async {
+      final repository = await startEditing(tester);
+      repository.failWrites = true;
+
+      await tester.tap(find.bySemanticsLabel('Eliminar: Palos'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Guardar cambios'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No se ha podido guardar el cambio.'), findsOneWidget);
+      expect(find.text('Guardar cambios'), findsOneWidget);
+      expect(repository.items, hasLength(2));
+    });
+
+    testWidgets('checkboxes are locked while editing', (tester) async {
+      final repository = await startEditing(tester);
+
+      await tester.tap(find.bySemanticsLabel('Comprar: Palos'));
+      await tester.pumpAndSettle();
+
+      expect(repository.items.first, palos);
+    });
+  });
 }
