@@ -22,9 +22,7 @@ class NotebookCheckbox extends StatelessWidget {
       checked: value,
       label: label,
       child: InkResponse(
-        onTap: onChanged == null
-            ? null
-            : () => onChanged!(!value),
+        onTap: onChanged == null ? null : () => onChanged!(!value),
         radius: size,
         child: SizedBox.square(
           dimension: size + 8,

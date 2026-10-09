@@ -65,25 +65,18 @@ class _DottedName extends StatelessWidget {
           children: [
             ConstrainedBox(
               // Always leaves room for a short piece of dotted line.
-              constraints: BoxConstraints(
-                maxWidth: constraints.maxWidth - 16,
-              ),
+              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
               child: Text(
                 name.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             const SizedBox(width: 4),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 5,
-                  right: 4,
-                ),
+                padding: const EdgeInsets.only(bottom: 5, right: 4),
                 child: Image.asset(
                   'assets/todo/linea_puntos.png',
                   height: 4,

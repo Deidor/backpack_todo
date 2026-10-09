@@ -28,11 +28,7 @@ class ChecklistScreen extends ConsumerWidget {
           Expanded(
             child: _ChecklistBody(
               items: items,
-              onRetry: ref
-                  .read(
-                    checklistControllerProvider.notifier,
-                  )
-                  .reload,
+              onRetry: ref.read(checklistControllerProvider.notifier).reload,
             ),
           ),
         ],
@@ -50,10 +46,7 @@ class ChecklistScreen extends ConsumerWidget {
           const SizedBox(width: 10),
           Expanded(
             flex: 2,
-            child: NotebookButton(
-              label: 'Editar',
-              onPressed: null,
-            ),
+            child: NotebookButton(label: 'Editar', onPressed: null),
           ),
         ],
       ),
@@ -70,26 +63,15 @@ class _ColumnHeaders extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(
-            'OBJETO',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text('OBJETO', style: Theme.of(context).textTheme.bodyMedium),
         ),
         SizedBox(
           width: checkColumnWidth,
-          child: Text(
-            'LO LLEVO?',
-            textAlign: TextAlign.center,
-            style: style,
-          ),
+          child: Text('LO LLEVO?', textAlign: TextAlign.center, style: style),
         ),
         SizedBox(
           width: checkColumnWidth,
-          child: Text(
-            'COMPRAR',
-            textAlign: TextAlign.center,
-            style: style,
-          ),
+          child: Text('COMPRAR', textAlign: TextAlign.center, style: style),
         ),
       ],
     );
@@ -97,10 +79,7 @@ class _ColumnHeaders extends StatelessWidget {
 }
 
 class _ChecklistBody extends StatelessWidget {
-  const _ChecklistBody({
-    required this.items,
-    required this.onRetry,
-  });
+  const _ChecklistBody({required this.items, required this.onRetry});
 
   final AsyncValue<List<Item>> items;
   final VoidCallback onRetry;
@@ -111,17 +90,12 @@ class _ChecklistBody extends StatelessWidget {
     if (value == null) {
       if (items.isLoading) {
         return const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.ink,
-          ),
+          child: CircularProgressIndicator(color: AppColors.ink),
         );
       }
       return _Message(
         text: 'No se ha podido cargar la libreta.\nRevisa tu conexión.',
-        action: NotebookButton(
-          label: 'Reintentar',
-          onPressed: onRetry,
-        ),
+        action: NotebookButton(label: 'Reintentar', onPressed: onRetry),
       );
     }
     if (value.isEmpty) {
@@ -157,10 +131,7 @@ class _Message extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          if (action != null) ...[
-            const SizedBox(height: 16),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 16), action!],
         ],
       ),
     );
@@ -180,11 +151,7 @@ class _AddIcon extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.ink, width: 2),
       ),
-      child: const Icon(
-        Icons.add,
-        size: 16,
-        color: Colors.white,
-      ),
+      child: const Icon(Icons.add, size: 16, color: Colors.white),
     );
   }
 }

@@ -23,18 +23,10 @@ class NotebookScaffold extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/todo/fondo.png',
-            fit: BoxFit.cover,
-          ),
+          Image.asset('assets/todo/fondo.png', fit: BoxFit.cover),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                10,
-                4,
-                10,
-                8,
-              ),
+              padding: const EdgeInsets.fromLTRB(10, 4, 10, 8),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final width = constraints.maxWidth;
@@ -71,9 +63,7 @@ class NotebookScaffold extends StatelessWidget {
           Positioned(
             top: 0,
             left: 0,
-            child: SafeArea(
-              child: _CloseStrap(onPressed: onClose),
-            ),
+            child: SafeArea(child: _CloseStrap(onPressed: onClose)),
           ),
         ],
       ),
@@ -114,16 +104,9 @@ class _CloseStrap extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.danger,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.ink,
-                      width: 2,
-                    ),
+                    border: Border.all(color: AppColors.ink, width: 2),
                   ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 22,
-                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 22),
                 ),
               ),
             ),

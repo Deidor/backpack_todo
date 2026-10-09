@@ -10,8 +10,7 @@ final checklistControllerProvider =
       retry: (retryCount, error) => null,
     );
 
-class ChecklistController
-    extends AsyncNotifier<List<Item>> {
+class ChecklistController extends AsyncNotifier<List<Item>> {
   @override
   Future<List<Item>> build() {
     return ref.watch(itemsRepositoryProvider).fetchItems();
