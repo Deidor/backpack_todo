@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
+import 'features/checklist/presentation/checklist_screen.dart';
 
 class PilgrimBackpackApp extends StatelessWidget {
   const PilgrimBackpackApp({super.key});
@@ -11,11 +12,7 @@ class PilgrimBackpackApp extends StatelessWidget {
       title: 'La Mochila del Peregrino',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const Scaffold(
-        body: Center(
-          child: Text('¿Lo llevo todo?', style: TextStyle(color: Colors.white)),
-        ),
-      ),
+      home: const ChecklistScreen(),
     );
   }
 }
