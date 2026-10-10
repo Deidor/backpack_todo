@@ -196,7 +196,7 @@ missing. `api/.env.example` contains no real credentials.
 | Variable | Default | Description |
 |---|---|---|
 | `API_BASE_URL` | `http://10.0.2.2:3000` | Address of the API |
-| `EXCLUSIVE_CHECKBOXES` | `false` | Alternative checkbox behaviour, see below |
+| `EXCLUSIVE_CHECKBOXES` | `false` | Alternative checkbox behaviour, see [Technical decisions](#technical-decisions) |
 
 ### Connecting the API to your own Supabase project
 
