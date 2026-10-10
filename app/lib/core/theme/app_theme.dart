@@ -18,23 +18,10 @@ abstract final class AppTheme {
       error: AppColors.danger,
     ),
     textTheme: const TextTheme(
-      titleLarge: TextStyle(
-        fontSize: 20,
-        height: 1,
-        color: AppColors.heading,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: AppColors.itemText,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 13,
-        color: AppColors.heading,
-      ),
-      labelSmall: TextStyle(
-        fontSize: 10,
-        color: AppColors.heading,
-      ),
+      titleLarge: TextStyle(fontSize: 20, height: 1, color: AppColors.heading),
+      bodyLarge: TextStyle(fontSize: 16, color: AppColors.itemText),
+      bodyMedium: TextStyle(fontSize: 13, color: AppColors.heading),
+      labelSmall: TextStyle(fontSize: 10, color: AppColors.heading),
     ),
   );
 }
