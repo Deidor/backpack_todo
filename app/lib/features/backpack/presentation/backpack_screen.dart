@@ -52,6 +52,7 @@ class BackpackScreen extends StatelessWidget {
                               width: width * 0.27,
                               child: const _BackpackObject(
                                 tool: BackpackTool.checklist,
+                                idleDelay: Duration(milliseconds: 1500),
                               ),
                             ),
                             Positioned(
@@ -60,6 +61,7 @@ class BackpackScreen extends StatelessWidget {
                               width: width * 0.27,
                               child: const _BackpackObject(
                                 tool: BackpackTool.stamps,
+                                idleDelay: Duration(milliseconds: 2100),
                               ),
                             ),
                             Positioned(
@@ -68,6 +70,7 @@ class BackpackScreen extends StatelessWidget {
                               width: width * 0.34,
                               child: const _BackpackObject(
                                 tool: BackpackTool.diary,
+                                idleDelay: Duration(milliseconds: 2700),
                               ),
                             ),
                             // Pocket fronts, drawn over the objects so that
@@ -130,9 +133,12 @@ class _Heading extends StatelessWidget {
 }
 
 class _BackpackObject extends StatelessWidget {
-  const _BackpackObject({required this.tool});
+  const _BackpackObject({required this.tool, required this.idleDelay});
 
   final BackpackTool tool;
+
+  /// Wait before the first hop, so that the objects do not move in unison.
+  final Duration idleDelay;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +150,15 @@ class _BackpackObject extends StatelessWidget {
         onTap: () => Navigator.of(context).push(ToolPreviewScreen.route(tool)),
         child: AspectRatio(
           aspectRatio: tool.aspectRatio,
-          child: Image.asset(tool.asset, fit: BoxFit.contain),
+          // A small hop every few seconds hints that it can be tapped.
+          child: Bounce(
+            infinite: true,
+            delay: idleDelay,
+            loopDelay: const Duration(seconds: 3),
+            duration: const Duration(milliseconds: 900),
+            from: 10,
+            child: Image.asset(tool.asset, fit: BoxFit.contain),
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,6 +33,7 @@ class AddItemSheet extends StatefulWidget {
 class _AddItemSheetState extends State<AddItemSheet> {
   final _controller = TextEditingController();
   String? _error;
+  AnimationController? _shake;
 
   @override
   void dispose() {
@@ -43,6 +45,7 @@ class _AddItemSheetState extends State<AddItemSheet> {
     final name = _controller.text.trim();
     if (name.isEmpty) {
       setState(() => _error = 'Escribe el nombre del objeto.');
+      _shake?.forward(from: 0);
       return;
     }
     Navigator.of(context).pop(name);
@@ -78,39 +81,45 @@ class _AddItemSheetState extends State<AddItemSheet> {
               ),
             ),
             const SizedBox(height: 14),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              textCapitalization: TextCapitalization.sentences,
-              textInputAction: TextInputAction.done,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(AddItemSheet.maxNameLength),
-              ],
-              onChanged: (_) {
-                if (_error != null) {
-                  setState(() => _error = null);
-                }
-              },
-              onSubmitted: (_) => _submit(),
-              cursorColor: Colors.white,
-              style: const TextStyle(
-                fontFamily: AppFonts.button,
-                fontSize: 15,
-                color: Colors.white,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Escribe el texto aquí',
-                hintStyle: const TextStyle(color: Colors.white54),
-                errorText: _error,
-                errorStyle: const TextStyle(color: AppColors.highlight),
-                filled: true,
-                fillColor: AppColors.panelField,
-                isDense: true,
-                border: fieldBorder,
-                enabledBorder: fieldBorder,
-                focusedBorder: fieldBorder,
-                errorBorder: fieldBorder,
-                focusedErrorBorder: fieldBorder,
+            ShakeX(
+              manualTrigger: true,
+              duration: const Duration(milliseconds: 400),
+              from: 8,
+              controller: (controller) => _shake = controller,
+              child: TextField(
+                controller: _controller,
+                autofocus: true,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.done,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(AddItemSheet.maxNameLength),
+                ],
+                onChanged: (_) {
+                  if (_error != null) {
+                    setState(() => _error = null);
+                  }
+                },
+                onSubmitted: (_) => _submit(),
+                cursorColor: Colors.white,
+                style: const TextStyle(
+                  fontFamily: AppFonts.button,
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Escribe el texto aquí',
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  errorText: _error,
+                  errorStyle: const TextStyle(color: AppColors.highlight),
+                  filled: true,
+                  fillColor: AppColors.panelField,
+                  isDense: true,
+                  border: fieldBorder,
+                  enabledBorder: fieldBorder,
+                  focusedBorder: fieldBorder,
+                  errorBorder: fieldBorder,
+                  focusedErrorBorder: fieldBorder,
+                ),
               ),
             ),
             const SizedBox(height: 16),

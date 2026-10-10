@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -71,47 +72,73 @@ class NotebookScaffold extends StatelessWidget {
   }
 }
 
-class _CloseStrap extends StatelessWidget {
+class _CloseStrap extends StatefulWidget {
   const _CloseStrap({required this.onPressed});
 
   final VoidCallback? onPressed;
 
   @override
+  State<_CloseStrap> createState() => _CloseStrapState();
+}
+
+class _CloseStrapState extends State<_CloseStrap> {
+  AnimationController? _retract;
+
+  /// Pulls the strap out of the screen, then closes.
+  Future<void> _close() async {
+    final retract = _retract;
+    if (retract == null || retract.isAnimating) return;
+    await retract.forward();
+    widget.onPressed?.call();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 74,
-      height: 110,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: -24,
-            left: -8,
-            width: 74,
-            child: Image.asset('assets/todo/tirante.png'),
-          ),
-          Positioned(
-            top: 34,
-            left: 14,
-            child: Semantics(
-              button: true,
-              label: 'Cerrar',
-              child: GestureDetector(
-                onTap: onPressed,
-                child: Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: AppColors.close,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.closeRing, width: 2),
+    return FadeOutUp(
+      manualTrigger: true,
+      duration: const Duration(milliseconds: 250),
+      from: 110,
+      curve: Curves.easeInBack,
+      controller: (controller) => _retract = controller,
+      child: SizedBox(
+        width: 74,
+        height: 110,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: -24,
+              left: -8,
+              width: 74,
+              child: Image.asset('assets/todo/tirante.png'),
+            ),
+            Positioned(
+              top: 34,
+              left: 14,
+              child: Semantics(
+                button: true,
+                label: 'Cerrar',
+                child: GestureDetector(
+                  onTap: widget.onPressed == null ? null : _close,
+                  child: Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: AppColors.close,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.closeRing, width: 2),
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 22,
+                    ),
                   ),
-                  child: const Icon(Icons.close, color: Colors.white, size: 22),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
